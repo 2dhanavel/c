@@ -1,120 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MongoDB CRUD App</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #f4f4f4;
-      text-align: center;
-      padding: 30px;
-    }
-    h2 {
-      color: #333;
-    }
-    input {
-      padding: 8px;
-      font-size: 16px;
-      width: 250px;
-    }
-    button {
-      padding: 8px 12px;
-      margin-left: 4px;
-      cursor: pointer;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 20px;
-    }
-    li {
-      background: #fff;
-      padding: 10px;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 6px;
-    }
-    span {
-      flex-grow: 1;
-      text-align: left;
-    }
-  </style>
+  <title>Upload to Dropbox</title>
 </head>
 <body>
-  <h2>📝 MongoDB CRUD Todo App</h2>
+  <h2>Upload File to Dropbox</h2>
 
-  <input type="text" id="taskInput" placeholder="Enter task..." />
-  <button onclick="addTodo()">Add</button>
+  <input type="file" id="fileInput">
+  <button onclick="uploadFile()">Upload</button>
 
-  <ul id="todoList"></ul>
+  <p id="status"></p>
 
   <script>
-    const API_URL = "http://localhost:5000/todos";
+    async function uploadFile() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
 
-    // Load all todos
-    async function loadTodos() {
-      const res = await fetch(API_URL);
-      const todos = await res.json();
+      if (!file) {
+        alert("Please select a file first!");
+        return;
+      }
 
-      const list = document.getElementById("todoList");
-      list.innerHTML = "";
+      // 🔑 Replace with your Dropbox Access Token
+      const ACCESS_TOKEN = "sl.u.AGCrXgA72NygTVaWowUU63EwrN91XJc3gnqWMyEyOsEx510fMGGHTfbuJ5Or-BxHTIocyESJJ8jzaEXNHsZG9X_tvxdL-C4CXmTm5gKczC0BjymtABdCDb3TITzDs1mRNrJ9sPsB2jD-URYX2ztgYRJJf85wFvvJpRN9VbiK-WyzxXm-G7dDB4BE-fj3BhtLcK1w6sxLu1JHVui0zFKY81-0lcS0a7WxQ_USJu5cCQnGgMcqOnWqhkN7i0zBg9lKrG3qbSNTZaQrF7kXTJ0cCTgZSOjFCKAf_0CcZZKjiiO-G4zZrdixg4ynp-4BBynykF_UJ9cNoVDpkblYp7HtF0ksrV0qEdEvYi8NMoIZ-NB37MrExxnnooRKG4lKBbmqjwViGIBj58ilxIMWQo2GUCpxDBmI5t3vixlEsU-HgTradO1ZGF14A844HpyLz8okMfl4RAkWGsl2T6y1iWa3q845EQ_tBPlpXMk_MiADhw_wlzRgqaqS9iRckqg7SY24yNsoKnIdY_CLz9U6LxOPdGfucGyXH0BRKC984U8D8xL2SmaN6L7QURdnAAaXHBLQb1EgqHn737PQP1qK8bIP4Ey-h8Wv_14cgsRZgg7M5R461PnIOgrspHqrN0lWB3jf0sJk19Ev5tmCP_rrGQjRlDpZcQGVFPcVgUXSubKP2mBB-DxAFnfAlEOkEpzjFEm5ZQupTVVhjDrSKVr77qJC4CCalmomHBeOXh2M0oPGKY8sIrLYsMdylZZBcZG2RcRjqjjddh0iccRUFKqwEdQZE_KSY8nLZ-Noz6PZhqeKqQlxHrvYRnYkZ-zIv0euF0XLvOKGtQ9zFfOfj9P6Nyaf74JoqQvPsdCsBEBEUMjQObJ-zdewzaxk6U4Ai7WEt13gH7foQQYbk3MLk3wPHHIkkwNPVJcCd8zuDOdUmEYPhr1D1qK-CAZyomDxOQe4e78cT8BxW3gOR5Zz-xEuTOZ3AmYrZ_iJ-hgNBFCRMjxWpwBaBCND7V3azp7i4BvEkmTNOVXgqLwunn3XSyXE25pmR40dEegHn6QVAos2A2EVG2_tKF5JtptZOFwc1C7wECB_8tlEFRGXl63Ouk7tsdNOqih-q7XWtcxjjNtHSo0nWIS7g69UMi8wwKe0R0bZDwLpeppAlijgQKwSAQaf-qVejW6FjFJA5TSTqNL4TmmMY1Nj1AMktEnjtF9laYNDGcLNGpkz7nNRd1jgJm_8E4Cdc9YzzfQMJSbX5wqYk3bRSRIfa8rvi6_nJSB5RIOlhJo2CgryYCyBiFeLAmYkSUosG7MYhMPZqrffYCtKlJHmjimMRvKmktbA0yiU-aVJ-tg1l0035s4Pz3Hu7qRqxLecvew5BPyeJUGU1iLE3-mcdNohLoHCqPj2gcV8bL6jjMxNjQZyHyferMff62GpQsvi6dTuzQgHAD3HHR4pBKkxt56NZoIXIgzFX7t8JHKNXnV3iBE";      const url = "https://content.dropboxapi.com/2/files/upload";
+      const args = {
+        path: "/" + file.name,   
+        mode: "add",
+        autorename: true,
+        mute: false
+      };
 
-      todos.forEach(todo => {
-        const li = document.createElement("li");
-        const span = document.createElement("span");
-        span.textContent = todo.task;
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + ACCESS_TOKEN,
+            "Dropbox-API-Arg": JSON.stringify(args),
+            "Content-Type": "application/octet-stream"
+          },
+          body: file
+        });
 
-        // Edit button
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "✏️";
-        editBtn.onclick = async () => {
-          const newTask = prompt("Edit task:", todo.task);
-          if (newTask) {
-            await fetch(`${API_URL}/${todo._id}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ task: newTask })
-            });
-            loadTodos();
-          }
-        };
-
-        // Delete button
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "❌";
-        delBtn.onclick = async () => {
-          await fetch(`${API_URL}/${todo._id}`, { method: "DELETE" });
-          loadTodos();
-        };
-
-        li.appendChild(span);
-        li.appendChild(editBtn);
-        li.appendChild(delBtn);
-        list.appendChild(li);
-      });
+        if (res.ok) {
+          document.getElementById("status").innerText = "✅ File uploaded successfully!";
+        } else {
+          const err = await res.json();
+          document.getElementById("status").innerText = "❌ Error: " + JSON.stringify(err);
+        }
+      } catch (err) {
+        document.getElementById("status").innerText = "❌ Upload failed: " + err;
+      }
     }
-
-    // Add todo
-    async function addTodo() {
-      const task = document.getElementById("taskInput").value.trim();
-      if (!task) return alert("Please enter a task");
-
-      await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ task })
-      });
-
-      document.getElementById("taskInput").value = "";
-      loadTodos();
-    }
-
-    // Load on page open
-    loadTodos();
   </script>
 </body>
 </html>
